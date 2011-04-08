@@ -87,7 +87,10 @@ handle_info({tcp, Socket, RawData}, State) ->
 handle_info(timeout, #state{lsock = LSock} = State) ->
     io:format("In handle info dealing with listening socket ~n"),
     {ok, _Sock} = gen_tcp:accept(LSock),
-    {noreply, State}.
+    {noreply, State};
+handle_info({tcp_closed, _}, State) ->
+		{noreply, State}.
+
 
 terminate(_Reason, _State) ->
     ok.
