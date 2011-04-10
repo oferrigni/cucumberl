@@ -22,6 +22,15 @@
 %
 %   cucumberl:run("./features/sample.feature").
 %
+
+main(FeatureFile) ->
+  Modules = discovery:all_step_modules(),
+  cucumberl:run(FeatureFile, Modules).
+
+main() ->
+  Modules = discovery:all_step_modules(),
+  cucumberl:run("./features/sample_table.feature", Modules).
+
 run(FilePath)              -> run(FilePath, []).
 run(FilePath, StepModules) -> run(FilePath, StepModules, 1).
 run(FilePath, StepModules, LineNumStart) ->
