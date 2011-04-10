@@ -26,7 +26,6 @@ find_all_modules_test() ->
   ?assertEqual(StepModules, discovery:all_step_modules()).
 
 find_all_feature_files_test() ->
-  ?debugMsg(c:pwd()),
   FeatureFiles = discovery:all_feature_files("../features/"),
   ExpectedFeatureFiles = lists:sort(["sample.feature","sample_more.feature","sample_table.feature","wire_protocol.feature"]),
   ?assertEqual(ExpectedFeatureFiles, FeatureFiles).
