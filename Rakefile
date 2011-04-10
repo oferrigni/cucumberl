@@ -16,6 +16,12 @@ end
 
 desc "Run the unit tests with NUnit"
 task :test do
+	Rake::Task['clean'].invoke
+	Rake::Task['build'].invoke
   sh "rebar eunit"
 end
 
+desc "Run the cucumberl as a standalone"
+task :main do
+	sh "erl -pa ebin -s cucumberl main stop"
+end
