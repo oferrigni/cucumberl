@@ -28,6 +28,8 @@ press(Op) ->
 add(X, Y) ->
     X + Y.
 
+multiply(X,Y) ->
+		X * Y.
 % A main() to kick it all off...
 
 main() ->

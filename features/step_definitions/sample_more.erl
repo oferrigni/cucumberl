@@ -4,12 +4,6 @@
 
 % Step definitions for the sample calculator Multiplication feature.
 
-step(['when', i, press, multiply], _) ->
-    [X, Y] = get(calculator),
-    Result = X * Y,
-    put(calculator, [Result]),
-    Result;
-
 step(_, _) -> undefined.
 
 % A main() to kick it all off...
