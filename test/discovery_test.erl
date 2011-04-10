@@ -24,3 +24,9 @@ find_a_specific_step_test() ->
 find_all_modules_test() ->
   StepModules = lists:sort([sample,cucumberl,sample_more,sample_table,test_step]),
   ?assertEqual(StepModules, discovery:all_step_modules()).
+
+find_all_feature_files_test() ->
+  ?debugMsg(c:pwd()),
+  FeatureFiles = discovery:all_feature_files("../features/"),
+  ExpectedFeatureFiles = lists:sort(["sample.feature","sample_more.feature","sample_table.feature","wire_protocol.feature"]),
+  ?assertEqual(ExpectedFeatureFiles, FeatureFiles).
