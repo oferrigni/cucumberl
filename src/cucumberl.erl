@@ -29,7 +29,8 @@ main(FeatureFile) ->
 
 main() ->
   Modules = discovery:all_step_modules(),
-  cucumberl:run("./features/sample_table.feature", Modules).
+  FeatureFiles = discovery:all_feature_files("./features/"),
+  lists:foreach(fun(File) -> cucumberl:run("./features/" ++ File, Modules) end, FeatureFiles).
 
 run(FilePath)              -> run(FilePath, []).
 run(FilePath, StepModules) -> run(FilePath, StepModules, 1).
