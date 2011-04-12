@@ -21,15 +21,17 @@ enter(N) ->
     put(calculator, [N | get(calculator)]).
 
 press(Op) ->
-    Result = apply(?MODULE, Op, get(calculator)),
-    put(calculator, [Result]),
-    Result.
+	try 
+		Result = apply(?MODULE, Op, get(calculator)),
+		put(calculator, [Result]),
+		Result
+	catch
+			error:_Reason -> undefined
+	end.
 
 add(X, Y) ->
     X + Y.
 
-multiply(X,Y) ->
-		X * Y.
 % A main() to kick it all off...
 
 main() ->
