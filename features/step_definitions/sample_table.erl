@@ -4,7 +4,7 @@
 
 % Step definitions for the sample calculator Multiplication feature.
 
-step([given, i, have, cleared, the, calculator], _) ->
+step([given,i,have,cleared,the,calculator], _) ->
     put(calculator, []),
     ok;
 
