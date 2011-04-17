@@ -37,7 +37,7 @@
 %% @end
 %%--------------------------------------------------------------------
 start_link(Socket,Pid) ->
-				io:format("In start link of cucumber client ~n"),
+				%io:format("In start link of cucumber client ~n"),
         gen_server:start_link({local, ?SERVER}, ?MODULE, [Socket,Pid], []).
 
 %%%===================================================================
@@ -56,7 +56,7 @@ start_link(Socket,Pid) ->
 %% @end
 %%--------------------------------------------------------------------
 init([LSock, Pid]) ->
-				io:format("In init of cucumber_client~n"),
+				%io:format("In init of cucumber_client~n"),
         {ok, #state{lsock = LSock,supPid = Pid}, 0}.
 
 %%--------------------------------------------------------------------
@@ -106,7 +106,7 @@ handle_info({tcp, Socket, _RawData}, State) ->
     {noreply, State};
 
 handle_info(timeout, #state{lsock = LSock} = State) ->
-    io:format("In cucumber_client blocking on listening socket ~n"),
+    %io:format("In cucumber_client blocking on listening socket ~n"),
     {ok, _Sock} = gen_tcp:accept(LSock),
     {noreply, State};
 
