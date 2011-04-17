@@ -31,11 +31,11 @@
 %% @end
 %%--------------------------------------------------------------------
 start_link() ->
-				io:format("Starting client supervisor~n"),
+			%io:format("Starting client supervisor~n"),
 				{ok, _Pid} = supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
 start_child(Socket, Pid) ->
-				io:format("Staring a new child on Socket ~p ~n", [Socket]),
+				%io:format("Staring a new child on Socket ~p ~n", [Socket]),
 				supervisor:start_child(Pid, [Socket,Pid]).
 
 %%%===================================================================
@@ -56,7 +56,7 @@ start_child(Socket, Pid) ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-				io:format("In init of client supervisor~n"),
+			%io:format("In init of client supervisor~n"),
         RestartStrategy = simple_one_for_one,
         MaxRestarts = 0,
         MaxSecondsBetweenRestarts = 1,

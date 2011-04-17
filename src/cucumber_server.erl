@@ -39,7 +39,7 @@
 %% @end
 %%--------------------------------------------------------------------
 start_link(Port) ->
-	  io:format("I should definitely see this only once~n"),
+	 %io:format("I should definitely see this only once~n"),
     gen_server:start_link({local, ?SERVER}, ?MODULE, [Port], []).
 
 %% @spec start_link() -> {ok, Pid}
@@ -71,7 +71,7 @@ stop() ->
 %%%===================================================================
 
 init([Port]) ->
-		io:format("Start listening on socket~n"),
+	%io:format("Start listening on socket~n"),
 		{ok, Pid} = cucumber_client_sup:start_link(),
     {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
     {ok, #state{port = Port, lsock = LSock,supPid = Pid}, 0}.
@@ -83,19 +83,19 @@ handle_call(get_count, _From, State) ->
 
 
 handle_call(_, _From, State) ->
-   io:format("In handle call no match ~n"),
+  %io:format("In handle call no match ~n"),
     {reply, {ok, something}, State}.
 	
 	handle_cast(stop, State) ->
     {stop, normal, State}.
 
-handle_info({tcp, Socket, RawData}, State) ->
-    io:format("In handle info dealing with incoming data ~p ~n", [RawData]),
+handle_info({tcp, Socket, _RawData}, State) ->
+   %io:format("In handle info dealing with incoming data ~p ~n", [RawData]),
     gen_tcp:send(Socket, io_lib:fwrite("[\"success\",[]]~n", [])),
     {noreply, State};
 
 handle_info(timeout, #state{lsock = LSock, supPid = ThePid} = State) ->
-    io:format("In handle info starting client supervisor ~n"),
+   %io:format("In handle info starting client supervisor ~n"),
 		{ok, Child} = cucumber_client_sup:start_child(LSock, ThePid),
 		{noreply, State#state{supPid = Child}};
 

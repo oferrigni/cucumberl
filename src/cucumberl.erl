@@ -52,7 +52,7 @@ run_lines(Lines, StepModules, LineNumStart) ->
               end
           end,
           {undefined, undefined, #cucumberl_stats{}}, ExpandedLines),
-    io:format("~n~p scenarios~n~p steps~n~n",
+   io:format("~n~p scenarios~n~p steps~n~n",
               [NScenarios, NSteps]),
     {ok, Stats}.
 
@@ -113,7 +113,7 @@ process_line({LineNum, Line},
              StepModules) ->
     % GWT stands for given-when-then.
     % GWT is the previous line's given-when-then atom.
-    io:format("~s:~s ",
+   io:format("~s:~s ",
               [string:left(Line, 65),
                string:left(integer_to_list(LineNum), 4)]),
 
@@ -170,16 +170,16 @@ process_line({LineNum, Line},
 
     % Emit result and our accumulator for our calling foldl.
     case {Section2, Result} of
-        {scenario, true}  -> io:format("ok~n"),
+        {scenario, true}  ->io:format("ok~n"),
                              {Section2, GWT2, Stats2};
-        {scenario, false} -> io:format("FAIL~n"),
+        {scenario, false} ->io:format("FAIL~n"),
                              {Section2, GWT2, Stats2};
-        {scenario, undefined} -> io:format("NO-STEP~n~n"),
-                                 io:format("a step definition snippet...~n"),
-                                 io:format("step(~p, _) ->~n  undefined.~n~n",
+        {scenario, undefined} ->io:format("NO-STEP~n~n"),
+                                io:format("a step definition snippet...~n"),
+                                io:format("step(~p, _) ->~n  undefined.~n~n",
                                            [Tokens]),
                                  {undefined, undefined, Stats2};
-        _ -> io:format("~n"),
+        _ ->io:format("~n"),
              {Section2, GWT2, Stats2}
     end.
 
@@ -195,7 +195,7 @@ numbered_lines(Lines) ->
 lines(FilePath) ->
     case file:read_file(FilePath) of
         {ok, FB} -> lines(binary_to_list(FB), [], []);
-        Err -> io:format("error: could not open file ~p~n", [FilePath]),
+        Err ->io:format("error: could not open file ~p~n", [FilePath]),
                exit(Err)
     end.
 
