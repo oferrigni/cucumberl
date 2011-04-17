@@ -9,12 +9,10 @@
 
 
 parse_step_matches_test() ->
-	InputJson = "[\"step_matches\",{\"name_to_match\":\"we're all
-	wired\"}]",
-	StepMatches = <<"step_matches">>,
-	NameToMatch = <<"name_to_match">>,
-	[StepMatches,{struct, [{NameToMatch, Name}]}] = mochijson2:decode(InputJson),
-	?assertEqual(<<"we're all\n\twired">>, Name).
+	InputJson = "[\"step_matches\",{\"name_to_match\":\"we're all\n\twired\"}]",
+	{ok, step_matches, Name, Args} = parsing:parse_json(InputJson),
+	?assertEqual(<<"we're all\n\twired">>, Name),
+	?assertEqual([], Args).
 
 parse_begin_scenario_test() ->
 	InputJson = "[\"begin_scenario\"]",
