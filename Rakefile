@@ -22,7 +22,6 @@ end
 desc "Run the unit tests with NUnit"
 task :test do
 	Rake::Task['clean'].invoke
-	Rake::Task['build_deps'].invoke
 	Rake::Task['build'].invoke
   sh "rebar eunit"
 end
