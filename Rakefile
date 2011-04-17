@@ -14,7 +14,7 @@ end
 
 desc "Clean the build"
 task :clean do
-  binDirs = Rake::FileList.new('**/*.beam')
+  binDirs = Rake::FileList.new('*/*.beam')
   FileUtils.rm_rf(binDirs);
   FileUtils.rm_rf(".eunit");
 end
