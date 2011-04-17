@@ -2,7 +2,7 @@
 
 -compile(export_all).
 
-step([given,some,stuff], _) ->
+step([given,some,stuff]) ->
   false;
-step(_,_)->
+step(_)->
   undefined.

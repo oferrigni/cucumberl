@@ -4,7 +4,7 @@
 
 % Step definitions for the sample calculator Multiplication feature.
 
-step(_, _) -> undefined.
+step(_) -> undefined.
 
 % A main() to kick it all off...
 

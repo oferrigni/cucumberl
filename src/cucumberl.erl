@@ -183,10 +183,10 @@ process_line({LineNum, Line},
              {Section2, GWT2, Stats2}
     end.
 
-step(['feature:' | _], _Line)  -> true;
-step(['scenario:' | _], _Line) -> true;
-step([], _) -> true;
-step(_, _)  -> undefined.
+%step(['feature:' | _], _Line)  -> true;
+%step(['scenario:' | _], _Line) -> true;
+%step([], _) -> true;
+%step(_, _)  -> undefined.
 
 numbered_lines(Lines) ->
     NLines = length(Lines),

@@ -12,17 +12,15 @@ find_a_step_test() ->
   ?assert(lists:any(fun({Mod,_})-> [{exports, Names}|_] = Mod:module_info(), lists:any(fun({Elem,_})-> Elem == step end, Names) end, code:all_loaded())).
 
 apply_a_step_test() ->
-  ?assertNot(apply(test_step, step,[[given,some,stuff], something])).
+  ?assertNot(apply(test_step, step,[[given,some,stuff]])).
 
 find_a_specific_step_test() ->
-  LoadedModules = code:all_loaded(),
   ArgList = [given,some,stuff],
-  LoadedStepModules = lists:filter(fun({Mod,_})-> [{exports, Names}|_] = Mod:module_info(), lists:any(fun({Elem,_})-> Elem == step end, Names) end, LoadedModules),
-  ?assert(false == discovery:run_steps(LoadedStepModules, ArgList)),
+  ?assert(false == discovery:run_steps(discovery:all_step_modules(), ArgList)),
   true.
 
 find_all_modules_test() ->
-  StepModules = lists:sort([sample,cucumberl,sample_more,sample_table,test_step]),
+  StepModules = lists:sort([sample,sample_more,sample_table,test_step]),
   ?assertEqual(StepModules, discovery:all_step_modules()).
 
 find_all_feature_files_test() ->
