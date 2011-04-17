@@ -16,3 +16,9 @@ parse_step_matches_test() ->
 	[StepMatches,{struct, [{NameToMatch, Name}]}] = mochijson2:decode(InputJson),
 	?assertEqual(<<"we're all\n\twired">>, Name).
 
+parse_begin_scenario_test() ->
+	InputJson = "[\"begin_scenario\"]",
+	BeginScenario = <<"begin_scenario">>,
+	[BeginScenario] = mochijson2:decode(InputJson),
+  ?assertEqual(<<"begin_scenario">>, BeginScenario).
+
