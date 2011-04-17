@@ -18,7 +18,8 @@ parse_step_matches_test() ->
 
 parse_begin_scenario_test() ->
 	InputJson = "[\"begin_scenario\"]",
-	BeginScenario = <<"begin_scenario">>,
-	[BeginScenario] = mochijson2:decode(InputJson),
-  ?assertEqual(<<"begin_scenario">>, BeginScenario).
+	{ok, begin_scenario} = parsing:parse_json(InputJson).
 
+parse_unknown_test() ->
+	InputJson = "[\"foo\"]",
+	{ok, undefined} = parsing:parse_json(InputJson).
