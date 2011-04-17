@@ -18,6 +18,11 @@ parse_begin_scenario_test() ->
 	InputJson = "[\"begin_scenario\"]",
 	{ok, begin_scenario} = parsing:parse_json(InputJson).
 
+parse_end_scenario_test() ->
+	InputJson ="[\"end_scenario\"]\n",
+	{ok, end_scenario} = parsing:parse_json(InputJson).
+
+
 parse_unknown_test() ->
 	InputJson = "[\"foo\"]",
 	{ok, undefined} = parsing:parse_json(InputJson).
