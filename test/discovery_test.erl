@@ -16,7 +16,7 @@ apply_a_step_test() ->
 
 find_a_specific_step_test() ->
   ArgList = [given,some,stuff],
-  ?assert(false == discovery:run_steps(discovery:all_step_modules(), ArgList)),
+  ?assertEqual(false ,discovery:run_steps(discovery:all_step_modules(), ArgList)),
   true.
 
 find_all_modules_test() ->
@@ -27,3 +27,8 @@ find_all_feature_files_test() ->
   FeatureFiles = discovery:all_feature_files("../features/"),
   ExpectedFeatureFiles = lists:sort(["sample.feature","sample_more.feature","sample_table.feature","wire_protocol.feature"]),
   ?assertEqual(ExpectedFeatureFiles, FeatureFiles).
+
+step_doesnt_exist_test() ->
+  ArgList = [other,stuff],
+  Result = discovery:run_steps(discovery:all_step_modules(), ArgList),
+  ?assertEqual(undefined, Result).
