@@ -4,7 +4,7 @@ main(_) ->
 	code:add_path("ebin"),
   application:start(cucumberl),
   CucumberResult = os:cmd("cucumber"),
-	io:format("~s~n", [CucumberResult]),
+	%io:format("~s~n", [CucumberResult]),
   application:stop(cucumberl),
   io:format("~n~n~n"),
   os:cmd("").
