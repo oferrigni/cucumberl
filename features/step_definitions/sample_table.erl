@@ -4,22 +4,20 @@
 
 % Step definitions for the sample calculator Multiplication feature.
 
-step([given,i,have,cleared,the,calculator]) ->
-    put(calculator, []),
-    ok;
-
 step([i,have,cleared,the,calculator]) ->
     put(calculator, []),
     ok;
 
-
-step(['when', i, press, multiply]) ->
+step([i, press, multiply]) ->
 	[X,Y] = get(calculator),
 	Result = X * Y,
 	put(calculator, [Result]),
 	Result;
 
 step(_) -> undefined.
+step([i,have,cleared,the,calculator], matches) -> ok;
+step([i, press, multiply], matches) -> ok;
+step(_,matches) -> undefined.
 
 % A main() to kick it all off...
 

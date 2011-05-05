@@ -4,5 +4,9 @@
 
 step([given,some,stuff]) ->
   false;
-step(_)->
+step(_) ->
+  undefined.
+step(_,matches) -> undefined;
+
+step(_,_)->
   undefined.
