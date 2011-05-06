@@ -9,9 +9,20 @@
 
 
 execute_json_test() ->
-	put(calculator, something),
-	?assertEqual(something,get(calculator)),
 	Json = "[\"step_matches\",{\"name_to_match\":\"I have cleared the calculator\"}]",
+  ExpectedJson = mochijson2:encode([success, [{struct, [{id,'I have cleared the calculator'}, {args,[]}]}]]),
 	AllStepModules = discovery:all_step_modules(),
-	cucumber:execute_json(Json, AllStepModules),
-	?assertEqual([], get(calculator)).
+	{ok,Result} = cucumber:execute_json(Json, AllStepModules),
+	?assertEqual(ExpectedJson, Result).
+
+execute_json_when_no_step_available_test() ->
+	Json = "[\"step_matches\",{\"name_to_match\":\"I have cleared the calculator 1\"}]",
+	AllStepModules = discovery:all_step_modules(),
+	Result = cucumber:execute_json(Json, AllStepModules),
+	?assertEqual({undefined}, Result).
+
+execute_json_when_begin_scenario_test() ->
+	Json = "[\"begin_scenario\"]",
+	AllStepModules = discovery:all_step_modules(),
+	Result = cucumber:execute_json(Json, AllStepModules),
+	?assertEqual({ok,noreply}, Result).

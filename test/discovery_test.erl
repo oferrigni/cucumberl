@@ -28,7 +28,23 @@ find_all_feature_files_test() ->
   ExpectedFeatureFiles = lists:sort(["sample.feature","sample_more.feature","sample_table.feature","wire_protocol.feature"]),
   ?assertEqual(ExpectedFeatureFiles, FeatureFiles).
 
-step_doesnt_exist_test() ->
-  ArgList = [other,stuff],
-  Result = discovery:run_steps(discovery:all_step_modules(), ArgList),
+step_matches_when_doesnt_exist_test() ->
+  ArgList = <<"[other,stuff]">>,
+  Result = discovery:step_matches(discovery:all_step_modules(), ArgList),
   ?assertEqual(undefined, Result).
+
+step_matches_when_does_exist_test() ->
+  ArgList = <<"[other,stuff]">>,
+  Result = discovery:step_matches(discovery:all_step_modules(), ArgList),
+  ?assertEqual(undefined, Result).
+
+step_matches_with_variable_test() ->
+  _ThirdArg = <<"i press Op">>,
+  SecondArg = <<"i have entered 50 into the calculator">>,
+  FourthArg = <<"I have entered 50 into the calculator">>,
+  ThirdArg =  <<"I have entered 50 into the calculator">>,
+  _ArgList = <<"[given,i,have,entered,_N,into,the,calculator]">>,
+  Result = discovery:step_matches(discovery:all_step_modules(),ThirdArg),
+  ?assertEqual(ok, Result).
+
+

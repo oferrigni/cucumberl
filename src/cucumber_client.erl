@@ -23,7 +23,7 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {lsock,supPid}).
+-record(state, {lsock,supPid, allStepModules}).
 
 %%%===================================================================
 %%% API
@@ -57,7 +57,8 @@ start_link(Socket,Pid) ->
 %%--------------------------------------------------------------------
 init([LSock, Pid]) ->
 				%io:format("In init of cucumber_client~n"),
-        {ok, #state{lsock = LSock,supPid = Pid}, 0}.
+        {ok, #state{lsock = LSock,supPid = Pid, allStepModules =
+						discovery:all_step_modules()}, 0}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -100,8 +101,20 @@ handle_cast(_Msg, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_info({tcp, Socket, _RawData}, State) ->
-    %io:format("In handle info dealing with incoming data ~p ~n", [RawData]),
+handle_info({tcp, Socket, _RawData}, #state{allStepModules =
+		StepModules} = State) ->
+    io:format("From Cucumber ~p ~n", [_RawData]),
+		try
+		Result = cucumber:execute_json(_RawData, StepModules),
+		case (Result) of 
+      {ok, noreply} -> gen_tcp:send(Socket, io_lib:fwrite("~s~n", mochijson2:encode([success,[]])));
+			{fail, _Reply} -> gen_tcp:send(Socket, io_lib:fwrite("[\"fail\"]~n", []));
+      {ok, Response} ->  io:format("Sending Response ~s~n",[Response]),gen_tcp:send(Socket, io_lib:fwrite("~s~n", [Response]));
+			undefined -> gen_tcp:send(Socket, io_lib:fwrite("[\"fail\",{~s}]~n", [Result]))
+		end
+	catch
+		error:_Reason -> undefined
+	end,
     gen_tcp:send(Socket, io_lib:fwrite("[\"success\",[]]~n", [])),
     {noreply, State};
 
