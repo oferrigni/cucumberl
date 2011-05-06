@@ -6,13 +6,13 @@
 
 step([i,have,cleared,the,calculator]) ->
     put(calculator, []),
-    ok;
+    {ok,noreply};
 
 step([i, press, multiply]) ->
 	[X,Y] = get(calculator),
 	Result = X * Y,
 	put(calculator, [Result]),
-	Result;
+  {ok,noreply};
 
 step(_) -> undefined.
 step([i,have,cleared,the,calculator], matches) -> ok;

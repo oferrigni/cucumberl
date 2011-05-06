@@ -22,13 +22,14 @@ step(_,matches) -> undefined.
 % Implementing a simple model here...
 
 enter(N) ->
-    put(calculator, [N | get(calculator)]).
+    put(calculator, [N | get(calculator)]),
+    {ok, noreply}.
 
 press(Op) ->
 	try 
 		Result = apply(?MODULE, Op, get(calculator)),
 		put(calculator, [Result]),
-		Result
+    {ok, noreply}
 	catch
 			error:_Reason -> undefined
 	end.
