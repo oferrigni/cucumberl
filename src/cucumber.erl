@@ -20,10 +20,10 @@ execute_json(Json, AllStepModules) ->
 		{ok, begin_scenario, _Tags} -> {ok, noreply};
 		{ok, end_scenario} -> {ok, noreply};
 		{ok, end_scenario, _Tags} -> {ok, noreply};
-    {ok, snippet_text, Keyword, Name} -> 
+    {ok, snippet_text, _Keyword, Name} -> 
       ListName = binary:bin_to_list(Name),
-      ListKeyword = binary:bin_to_list(Keyword),
-      CompleteList = "For " ++ ListKeyword ++ " Please implement step(" ++ ListName  ++  ")\n and step("++ ListName++ ", matches)",
+      %CompleteList = "For " ++ ListKeyword ++ " Please implement step(" ++ ListName  ++  ")\n and step("++ ListName++ ", matches)",
+      CompleteList = "step(" ++ lists:flatmap(fun(Atom) -> atom_to_list(Atom)++","end,cucumberl:string_to_atoms(ListName))  ++  ")\nstep("++ lists:flatmap(fun(Atom) -> atom_to_list(Atom)++","end,cucumberl:string_to_atoms(ListName)) ++ ", matches)",
       End = mochijson2:encode([success, list_to_atom(CompleteList)]),
       {ok, End};
 		{ok, invoke, Name, _Args} ->	StepAtoms = cucumberl:string_to_atoms(binary:bin_to_list(Name)),
