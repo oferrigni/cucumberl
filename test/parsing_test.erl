@@ -24,6 +24,11 @@ parse_begin_scenario_test() ->
 	InputJson = "[\"begin_scenario\"]",
 	{ok, begin_scenario} = parsing:parse_json(InputJson).
 
+parse_begin_scenario_with_tags_test() ->
+	InputJson = "[\"begin_scenario\",{\"tags\":[\"wire\"]}]",
+  {ok, begin_scenario, Tags} = parsing:parse_json(InputJson),
+  ?assertEqual([<<"wire">>], Tags).
+
 parse_end_scenario_test() ->
 	InputJson ="[\"end_scenario\"]\n",
 	{ok, end_scenario} = parsing:parse_json(InputJson).

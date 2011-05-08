@@ -12,12 +12,14 @@
 -define(MULTILINE_ARG_CLASS, <<"multiline_arg_class">>).
 -define(STEP_NAME, <<"step_name">>).
 -define(STEP_KEYWORD, <<"step_keyword">>).
+-define(TAGS, <<"tags">>).
 
 parse_json(Json) ->
   try
 	Parsed = mochijson2:decode(Json),
 	case (Parsed) of 
 		[?BEGIN_SCENARIO] -> {ok, begin_scenario};
+    [?BEGIN_SCENARIO, {struct, [{?TAGS, Tags}]}] -> {ok, begin_scenario, Tags};
 		[?END_SCENARIO] -> {ok, end_scenario};
 		[?STEP_MATCHES, {struct, [{?NAME_TO_MATCH, Name}]}] -> {ok,
 				step_matches, Name, []};
