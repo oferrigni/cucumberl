@@ -21,6 +21,7 @@ parse_json(Json) ->
 		[?BEGIN_SCENARIO] -> {ok, begin_scenario};
     [?BEGIN_SCENARIO, {struct, [{?TAGS, Tags}]}] -> {ok, begin_scenario, Tags};
 		[?END_SCENARIO] -> {ok, end_scenario};
+    [?END_SCENARIO, {struct, [{?TAGS, Tags}]}] -> {ok, end_scenario, Tags};
 		[?STEP_MATCHES, {struct, [{?NAME_TO_MATCH, Name}]}] -> {ok,
 				step_matches, Name, []};
     [?INVOKE, {struct, [{?ID, Name}, {?ARGS, Args}]}] -> {ok, invoke, Name, Args};
