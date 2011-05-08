@@ -11,7 +11,10 @@ step([i, press, Op]) ->
     press(Op);
 
 step([the, result, should, be, Result, on, the, screen]) ->
-    [list_to_integer(atom_to_list(Result))] =:= get(calculator);
+  case ([list_to_integer(atom_to_list(Result))] =:= get(calculator)) of
+    true -> {ok, noreply};
+    false -> undefined
+  end;
 
 step(_) -> undefined.
 
