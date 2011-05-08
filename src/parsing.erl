@@ -8,6 +8,10 @@
 -define(INVOKE, <<"invoke">>).
 -define(ID, <<"id">>).
 -define(ARGS, <<"args">>).
+-define(SNIPPET_TEXT, <<"snippet_text">>).
+-define(MULTILINE_ARG_CLASS, <<"multiline_arg_class">>).
+-define(STEP_NAME, <<"step_name">>).
+-define(STEP_KEYWORD, <<"step_keyword">>).
 
 parse_json(Json) ->
 	Parsed = mochijson2:decode(Json),
@@ -17,5 +21,7 @@ parse_json(Json) ->
 		[?STEP_MATCHES, {struct, [{?NAME_TO_MATCH, Name}]}] -> {ok,
 				step_matches, Name, []};
     [?INVOKE, {struct, [{?ID, Name}, {?ARGS, Args}]}] -> {ok, invoke, Name, Args};
+    [?SNIPPET_TEXT, {struct, [{?STEP_KEYWORD, Keyword}, {?STEP_NAME, Name}, {?MULTILINE_ARG_CLASS, _}]}] ->
+      {ok, snippet_text, Keyword, Name};
     _ -> io:format("Encountered unknown json ~s ~n", [Parsed]), {ok, undefined}
   end.

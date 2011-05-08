@@ -42,3 +42,9 @@ parse_invoke_with_args_test() ->
   {ok, invoke, Name, Args} = parsing:parse_json(InputJson),
   ?assertEqual(<<"I have cleared the calculator">>, Name),
   ?assertEqual([], Args).
+
+parse_snippet_text_with_args_test() ->
+  InputJson = "[\"snippet_text\",{\"step_keyword\":\"Given\",\"step_name\":\"I have entered 50 into the calculator\",\"multiline_arg_class\":\"\"}]",
+  {ok, snippet_text, Keyword, Name} = parsing:parse_json(InputJson),
+  ?assertEqual(<<"I have entered 50 into the calculator">>, Name),
+  ?assertEqual(<<"Given">>, Keyword).
