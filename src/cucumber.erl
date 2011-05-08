@@ -17,7 +17,9 @@ execute_json(Json, AllStepModules) ->
         _ -> io:format("Name not found: ~s~n", [Name]), {ok, not_found}
       end;
 		{ok, begin_scenario} -> {ok, noreply};
+		{ok, begin_scenario, _Tags} -> {ok, noreply};
 		{ok, end_scenario} -> {ok, noreply};
+		{ok, end_scenario, _Tags} -> {ok, noreply};
     {ok, snippet_text, Keyword, Name} -> 
       ListName = binary:bin_to_list(Name),
       ListKeyword = binary:bin_to_list(Keyword),
