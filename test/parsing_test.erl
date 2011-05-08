@@ -37,6 +37,10 @@ parse_begin_scenario_with_tags() ->
 	InputJson = "[\"begin_scenario\",{\"tags\":[\"wire\"]}]\n" ,
 	{ok, begin_scenario} = parsing:parse_json(InputJson).
 
+parse_new_line_only_test() ->
+	InputJson = "\n" ,
+	{ok, new_line} = parsing:parse_json(InputJson).
+
 parse_invoke_with_args_test() ->
   InputJson = "[\"invoke\",{\"id\":\"I have cleared the calculator\",\"args\":[]}]\n",
   {ok, invoke, Name, Args} = parsing:parse_json(InputJson),

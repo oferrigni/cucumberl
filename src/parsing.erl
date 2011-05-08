@@ -14,6 +14,7 @@
 -define(STEP_KEYWORD, <<"step_keyword">>).
 
 parse_json(Json) ->
+  try
 	Parsed = mochijson2:decode(Json),
 	case (Parsed) of 
 		[?BEGIN_SCENARIO] -> {ok, begin_scenario};
@@ -24,4 +25,8 @@ parse_json(Json) ->
     [?SNIPPET_TEXT, {struct, [{?STEP_KEYWORD, Keyword}, {?STEP_NAME, Name}, {?MULTILINE_ARG_CLASS, _}]}] ->
       {ok, snippet_text, Keyword, Name};
     _ -> io:format("Encountered unknown json ~s ~n", [Parsed]), {ok, undefined}
-  end.
+  end
+  catch
+   error:_Reason ->
+     {ok, new_line}
+ end. 
