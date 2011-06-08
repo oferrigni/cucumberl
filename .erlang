@@ -1,2 +1,3 @@
 lists:foreach(fun(Elem)-> code:load_abs(re:replace(Elem, ".beam", "",[{return, list}]))end, filelib:wildcard("**/**/*.beam")),
 lists:foreach(fun(Elem)-> code:load_abs(re:replace(Elem, ".beam", "",[{return, list}]))end, filelib:wildcard("**/*.beam")).
+lists:foreach(fun(Elem)-> code:load_abs(re:replace(Elem, ".beam", "",[{return, list}]))end, filelib:wildcard("**/*/**/*.beam")).
