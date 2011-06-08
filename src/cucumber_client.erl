@@ -103,25 +103,25 @@ handle_cast(_Msg, State) ->
 %%--------------------------------------------------------------------
 handle_info({tcp, Socket, _RawData}, #state{allStepModules =
 		StepModules} = State) ->
-    io:format("From Cucumber ~p ~n", [_RawData]),
+    %io:format("From Cucumber ~p ~n", [_RawData]),
 		try
 		Result = cucumber:execute_json(_RawData, StepModules),
 		case (Result) of 
-      {ok, noreply} -> io:format("Sending ~s~n~n", [mochijson2:encode([success])]),
+      {ok, noreply} -> %io:format("Sending ~s~n~n", [mochijson2:encode([success])]),
         ok = gen_tcp:send(Socket, mochijson2:encode([success])),
         ok = gen_tcp:send(Socket, "\n");
-      {fail, _Reply} -> io:format("Sending ~s~n", [mochijson2:encode([fail])]),
+      {fail, _Reply} -> %io:format("Sending ~s~n", [mochijson2:encode([fail])]),
         gen_tcp:send(Socket, mochijson2:encode([fail])),
         gen_tcp:send(Socket, "\n");
       {ok, new_line} -> ok;
       {ok, not_found} -> 
-        io:format("Did not find step, sending success~n"),
+        %io:format("Did not find step, sending success~n"),
         gen_tcp:send(Socket, mochijson2:encode([success,[]])),
         gen_tcp:send(Socket, "\n");
-      {ok, Response} ->  io:format("Sending Response ~s~n",[Response]),
+      {ok, Response} ->  %io:format("Sending Response ~s~n",[Response]),
         gen_tcp:send(Socket, Response),
         gen_tcp:send(Socket, "\n");
-      undefined -> io:format("Unknown in client hit~n"),
+      undefined -> %io:format("Unknown in client hit~n"),
         gen_tcp:send(Socket, io_lib:fwrite("[\"fail\",{~s}]~n", [Result]))
 		end
 	catch
@@ -137,6 +137,8 @@ handle_info(timeout, #state{lsock = LSock} = State) ->
     {noreply, State};
 
 handle_info({tcp_closed, _},#state{lsock = LSock} = State) ->
+    %exit(die),
+    init:stop(),
     {ok, _Sock} = gen_tcp:accept(LSock),
 		{noreply, State};
 
