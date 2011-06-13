@@ -62,7 +62,7 @@ expanded_lines(NumberedLines) ->
         lists:foldl(
           fun({_LineNum, Line} = LNL,
               {LastScenarioOutline, RowHeader, Out}) ->
-             case {LastScenarioOutline, RowHeader, string_to_atoms(Line)} of
+              case {LastScenarioOutline, RowHeader, utils:string_to_atoms(Line)} of
                  {undefined, _, ['scenario', 'outline:' | _]} ->
                      {[LNL], undefined, Out};
                  {undefined, _, _} ->
@@ -122,7 +122,7 @@ process_line({LineNum, Line},
         unzip_odd_even(string:tokens(Line, "\"")),
 
     % Atomize the unquoted sections.
-    TokenAtoms = lists:map(fun string_to_atoms/1, TokenStrs),
+    TokenAtoms = lists:map(fun utils:string_to_atoms/1, TokenStrs),
 
     % Zip it back together into a Tokens list that might look like...
     %   [given, i, have, entered, "Joe Armstrong", as, my, name]
@@ -248,9 +248,6 @@ evens(L) ->
     {_Odds, Evens} = unzip_odd_even(L),
     Evens.
 
-string_to_atoms(StrWords) ->
-    lists:map(fun (Y) -> list_to_atom(string:to_lower(Y)) end,
-              string:tokens(StrWords, " ")).
 
 % ------------------------------------
 
@@ -268,9 +265,3 @@ zip_test() ->
     ?assertMatch([1, 2, 3, 4, 5, 6],
                  flat_zip_odd_even([[1], [3], [5]], [2, 4, 6])).
 
-string_to_atoms_test() ->
-    ?assertMatch([], string_to_atoms("")),
-    ?assertMatch([a, bb, ccc],
-                 string_to_atoms("a bb ccc")),
-    ?assertMatch([a, bb, ccc],
-                 string_to_atoms("  a  bb   ccc  ")).

@@ -27,9 +27,10 @@ lists:sort(lists:filter(
 	UnfilteredFeatureFiles)).
 
 step_matches(Modules, ArgList) ->
-  Atoms = cucumberl:string_to_atoms(binary:bin_to_list(ArgList)),
+  Atoms = utils:bitstring_to_atoms(ArgList),
   lists:foldl(fun(Mod, undefined) -> 
         Mod:step(Atoms, matches);
         (_, Acc) -> Acc
   end,
   undefined, Modules).
+
