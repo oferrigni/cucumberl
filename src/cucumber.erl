@@ -11,7 +11,7 @@ execute_json(Json, AllStepModules) ->
       Matches = discovery:step_matches(AllStepModules, Name),
       case (Matches) of
         ok ->
-          ToBeEncoded = [success, [{struct,[{id, list_to_atom(binary:bin_to_list(Name))}, {args, Args}]}]],
+          ToBeEncoded = [success, [{struct,[{id, utils:bitstring_to_atom(Name)}, {args, Args}]}]],
           End = mochijson2:encode(ToBeEncoded),
 		 	    {ok, End};
         _ -> %io:format("Name not found: ~s~n", [Name]),
