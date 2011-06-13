@@ -37,3 +37,22 @@ execute_json_when_begin_scnearion_tags_test() ->
     meck:unload(parsing)
   end.
 
+execute_json_when_end_scenario_test() ->
+  meck:new(parsing),
+  try 
+    meck:expect(parsing, parse_json, fun("stub") -> {ok, end_scenario} end),
+    {ok, noreply} = cucumber:execute_json("stub", []),
+    ?assert(meck:validate(parsing))
+  after
+    meck:unload(parsing)
+  end.
+
+execute_json_when_end_scenario_tags_test() ->
+  meck:new(parsing),
+  try 
+    meck:expect(parsing, parse_json, fun("stub") -> {ok, end_scenario, "foo"} end),
+    {ok, noreply} = cucumber:execute_json("stub", []),
+    ?assert(meck:validate(parsing))
+  after
+    meck:unload(parsing)
+  end.
