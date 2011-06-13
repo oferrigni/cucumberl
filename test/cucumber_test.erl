@@ -28,11 +28,12 @@ execute_json_when_begin_scenario_test() ->
 	?assertEqual({ok,noreply}, Result).
 
 execute_json_when_begin_scnearion_tags_test() ->
-  StubJson= "stub",
-  StepModules = [],
   meck:new(parsing),
-  meck:expect(parsing, parse_json, fun(SomeInput) -> {ok, begin_scenario, "foo"} end),
-  {ok, noreply} = cucumber:execute_json(StubJson, StepModules),
-  ?assert(meck:validate(parsing)),
-  meck:unload(parsing).
+  try 
+    meck:expect(parsing, parse_json, fun("stub") -> {ok, begin_scenario, "foo"} end),
+    {ok, noreply} = cucumber:execute_json("stub", []),
+    ?assert(meck:validate(parsing))
+  after
+    meck:unload(parsing)
+  end.
 
