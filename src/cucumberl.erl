@@ -265,9 +265,3 @@ zip_test() ->
     ?assertMatch([1, 2, 3, 4, 5, 6],
                  flat_zip_odd_even([[1], [3], [5]], [2, 4, 6])).
 
-string_to_atoms_test() ->
-    ?assertMatch([], utils:string_to_atoms("")),
-    ?assertMatch([a, bb, ccc],
-                 utils:string_to_atoms("a bb ccc")),
-    ?assertMatch([a, bb, ccc],
-                 utils:string_to_atoms("  a  bb   ccc  ")).
