@@ -56,3 +56,21 @@ execute_json_when_end_scenario_tags_test() ->
   after
     meck:unload(parsing)
   end.
+
+execute_json_when_invoke_test() ->
+  meck:new(parsing),
+  meck:new(utils),
+  meck:new(discovery),
+  try 
+    meck:expect(parsing, parse_json, fun("stub") -> {ok, invoke, "foo", "baz"} end),
+    meck:expect(utils, string_to_atoms, fun("foo") -> ['foo'] end),
+    meck:expect(discovery, run_steps, fun([], ['foo']) -> {ok} end),
+    {ok} = cucumber:execute_json("stub", []),
+    ?assert(meck:validate(parsing)),
+    ?assert(meck:validate(utils)),
+    ?assert(meck:validate(discovery))
+  after
+    meck:unload(parsing),
+    meck:unload(utils),
+    meck:unload(discovery)
+  end.
