@@ -62,8 +62,8 @@ execute_json_when_invoke_test() ->
   meck:new(utils),
   meck:new(discovery),
   try 
-    meck:expect(parsing, parse_json, fun("stub") -> {ok, invoke, "foo", "baz"} end),
-    meck:expect(utils, string_to_atoms, fun("foo") -> ['foo'] end),
+    meck:expect(parsing, parse_json, fun("stub") -> {ok, invoke, <<"foo">>, "baz"} end),
+    meck:expect(utils, bitstring_to_atoms, fun(<<"foo">>) -> ['foo'] end),
     meck:expect(discovery, run_steps, fun([], ['foo']) -> {ok} end),
     {ok} = cucumber:execute_json("stub", []),
     ?assert(meck:validate(parsing)),
