@@ -23,7 +23,7 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {lsock,supPid, allStepModules}).
+-record(state, {sock,supPid, allStepModules}).
 
 %%%===================================================================
 %%% API
@@ -55,9 +55,9 @@ start_link(Socket,Pid) ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
-init([LSock, Pid]) ->
-				%io:format("In init of cucumber_client~n"),
-        {ok, #state{lsock = LSock,supPid = Pid, allStepModules =
+init([Sock, Pid]) ->
+	io:format("In init of cucumber_client not waiting for socket ~p~n", [self()]),
+        {ok, #state{sock = Sock,supPid = Pid, allStepModules =
 						discovery:all_step_modules()}, 0}.
 
 %%--------------------------------------------------------------------
@@ -88,6 +88,11 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_cast(socket_given, #state{sock = Sock} = State) ->
+    io:format("In socket_given of cucumber_client~n"),
+    inet:setopts(Sock, [{active, true}]),
+    {noreply, State};
+
 handle_cast(_Msg, State) ->
         {noreply, State}.
 
@@ -103,7 +108,6 @@ handle_cast(_Msg, State) ->
 %%--------------------------------------------------------------------
 handle_info({tcp, Socket, _RawData}, #state{allStepModules =
 		StepModules} = State) ->
-    %io:format("From Cucumber ~p ~n", [_RawData]),
 		try
 		Result = cucumber:execute_json(_RawData, StepModules),
 		case (Result) of 
@@ -131,18 +135,16 @@ handle_info({tcp, Socket, _RawData}, #state{allStepModules =
     %gen_tcp:send(Socket, io_lib:fwrite("[\"success\",[]]~n", [])),
     {noreply, State};
 
-handle_info(timeout, #state{lsock = LSock} = State) ->
+handle_info(timeout, #state{sock = _Sock} = State) ->
     %io:format("In cucumber_client blocking on listening socket ~n"),
-    {ok, _Sock} = gen_tcp:accept(LSock),
     {noreply, State};
 
-handle_info({tcp_closed, _},#state{lsock = LSock} = State) ->
+handle_info({tcp_closed, _},#state{sock = _Sock} = State) ->
     %exit(die),
-    init:stop(),
-    {ok, _Sock} = gen_tcp:accept(LSock),
-		{noreply, State};
+	{noreply, State};
 
 handle_info(_Info, State) ->
+    io:format("In unknown~n"),
         {noreply, State}.
 
 %%--------------------------------------------------------------------
