@@ -4,7 +4,7 @@ task :default => :build
 
 desc "Use rebar to build the application including deps"
 task :build_all do
-  sh "rebar compile eunit"
+  sh "rebar get-deps compile eunit"
 end
 desc "Use rebar to build the application"
 task :build do
