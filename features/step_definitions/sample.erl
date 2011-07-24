@@ -40,9 +40,4 @@ press(Op) ->
 add(X, Y) ->
     X + Y.
 
-% A main() to kick it all off...
-
-main() ->
-    put(calculator, []),
-    cucumberl:run("./features/sample.feature", [?MODULE]).
 
