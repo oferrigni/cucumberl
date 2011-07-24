@@ -2,14 +2,13 @@ configuration = ENV['CONFIGURATION'] || 'Debug'
 
 task :default => :build
 
+desc "Use rebar to build the application including deps"
+task :build_all do
+  sh "rebar compile eunit"
+end
 desc "Use rebar to build the application"
 task :build do
-  sh "rebar compile"
-end
-
-desc "Use rebar to build the deps"
-task :build_deps do
-  sh "cd mochiweb;rebar compile"
+  sh "rebar compile skip_deps=true"
 end
 
 desc "Clean the build"
@@ -23,7 +22,7 @@ desc "Run the unit tests with NUnit"
 task :test do
 	Rake::Task['clean'].invoke
 	Rake::Task['build'].invoke
-  sh "rebar eunit"
+  sh "rebar eunit skip_deps=true"
 end
 
 desc "Run the cucumberl as a standalone"
