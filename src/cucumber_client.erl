@@ -38,7 +38,7 @@
 %%--------------------------------------------------------------------
 start_link() ->
 				%io:format("In start link of cucumber client ~n"),
-        gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+        gen_server:start_link(?MODULE, [], []).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -56,7 +56,6 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-	io:format("In init of cucumber_client not waiting for socket ~p~n", [self()]),
         {ok, #state{allStepModules = discovery:all_step_modules()}, 0}.
 
 %%--------------------------------------------------------------------
@@ -88,7 +87,6 @@ handle_call(_Request, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({socket_given, Sock}, State) ->
-    io:format("In socket_given of cucumber_client~n"),
     inet:setopts(Sock, [{active, true}]),
     {noreply, State};
 
@@ -139,7 +137,6 @@ handle_info({tcp_closed, _},State) ->
 	{noreply, State};
 
 handle_info(_Info, State) ->
-    io:format("In unknown~n"),
         {noreply, State}.
 
 %%--------------------------------------------------------------------
