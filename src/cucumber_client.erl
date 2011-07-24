@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/2]).
+-export([start_link/0]).
 
 %% gen_server callbacks
 -export([init/1,
@@ -23,7 +23,7 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {sock,supPid, allStepModules}).
+-record(state, {allStepModules}).
 
 %%%===================================================================
 %%% API
@@ -36,9 +36,9 @@
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
 %%--------------------------------------------------------------------
-start_link(Socket,Pid) ->
+start_link() ->
 				%io:format("In start link of cucumber client ~n"),
-        gen_server:start_link({local, ?SERVER}, ?MODULE, [Socket,Pid], []).
+        gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -55,10 +55,9 @@ start_link(Socket,Pid) ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
-init([Sock, Pid]) ->
+init([]) ->
 	io:format("In init of cucumber_client not waiting for socket ~p~n", [self()]),
-        {ok, #state{sock = Sock,supPid = Pid, allStepModules =
-						discovery:all_step_modules()}, 0}.
+        {ok, #state{allStepModules = discovery:all_step_modules()}, 0}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -88,7 +87,7 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast(socket_given, #state{sock = Sock} = State) ->
+handle_cast({socket_given, Sock}, State) ->
     io:format("In socket_given of cucumber_client~n"),
     inet:setopts(Sock, [{active, true}]),
     {noreply, State};
@@ -108,7 +107,7 @@ handle_cast(_Msg, State) ->
 %%--------------------------------------------------------------------
 handle_info({tcp, Socket, _RawData}, #state{allStepModules =
 		StepModules} = State) ->
-		try
+		%try
 		Result = cucumber:execute_json(_RawData, StepModules),
 		case (Result) of 
       {ok, noreply} -> %io:format("Sending ~s~n~n", [mochijson2:encode([success])]),
@@ -127,19 +126,15 @@ handle_info({tcp, Socket, _RawData}, #state{allStepModules =
         gen_tcp:send(Socket, "\n");
       undefined -> %io:format("Unknown in client hit~n"),
         gen_tcp:send(Socket, io_lib:fwrite("[\"fail\",{~s}]~n", [Result]))
-		end
-	catch
-		error:Reason -> 
-    io:format("Caught an error! ~s~n",[Reason]),undefined
-	end,
+		end,
+	%catch
+		%error:Reason -> 
+    %io:format("Caught an error! ~s with input ~p~n",[Reason, _RawData]),undefined
+	%end,
     %gen_tcp:send(Socket, io_lib:fwrite("[\"success\",[]]~n", [])),
     {noreply, State};
 
-handle_info(timeout, #state{sock = _Sock} = State) ->
-    %io:format("In cucumber_client blocking on listening socket ~n"),
-    {noreply, State};
-
-handle_info({tcp_closed, _},#state{sock = _Sock} = State) ->
+handle_info({tcp_closed, _},State) ->
     %exit(die),
 	{noreply, State};
 

@@ -67,9 +67,9 @@ stop() ->
 
 accept_loop(LSock) ->
     {ok, Sock} = gen_tcp:accept(LSock),
-		{ok, Child} = cucumber_client_sup:start_child(Sock),
+		{ok, Child} = cucumber_client_sup:start_child(),
 		gen_tcp:controlling_process(Sock, Child),
-		gen_server:cast(Child, socket_given),
+		gen_server:cast(Child, {socket_given, Sock}),
 		accept_loop(LSock).
 
 

@@ -21,7 +21,7 @@ execute_json(Json, AllStepModules) ->
 		{ok, end_scenario} -> {ok, noreply};
 		{ok, end_scenario, _Tags} -> {ok, noreply};
     {ok, snippet_text, _Keyword, Name} -> 
-      End = reponse:snippet(Name),
+      End = response:snippet(Name),
       {ok, End};
 		{ok, invoke, Name, _Args} ->	StepAtoms = utils:bitstring_to_atoms(Name),
       discovery:run_steps(AllStepModules, StepAtoms);
