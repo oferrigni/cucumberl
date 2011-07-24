@@ -3,3 +3,4 @@ erl_crash.dump
 **.cov.html
 *~
 .eunit
+deps
