@@ -13,7 +13,7 @@ end
 
 desc "Clean the build"
 task :clean do
-  binDirs = Rake::FileList.new('*/*.beam')
+  binDirs = Rake::FileList.new('**/*.beam')
   FileUtils.rm_rf(binDirs);
   FileUtils.rm_rf(".eunit");
 end
@@ -25,7 +25,12 @@ task :test do
   sh "rebar eunit skip_deps=true"
 end
 
+desc "Generate cucumberl as a standalone release"
+task :generate do
+	sh "rebar generate force=1"
+end
+
 desc "Run the cucumberl as a standalone"
 task :main do
-	sh "erl -pa ebin -s cucumberl main stop"
+	sh "CUCUMBERL_CWD=`pwd` sh rel/cucumberl/bin/cucumberl console"
 end
