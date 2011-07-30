@@ -13,7 +13,7 @@ begin
     gem.executables = ["cucumberl"]
     gem.add_dependency "cucumber", ">=0.5.2"
 
-    gem.files += FileList['../cucumberl/*']
+    gem.files += FileList['./**/*']
     gem.test_files = []
   end
   Jeweler::GemcutterTasks.new
@@ -23,9 +23,9 @@ end
 
 task :gemspec => :copy_binaries
 
-desc "Copy Cuke4Nuke binaries to the dotnet directory"
+desc "Copy cucumberl erts cucumberl directory"
 task :copy_binaries do
-  Dir[File.dirname(__FILE__) + '/../{ebin,deps}'].each do |file|
-    cp file, 'dotnet' unless file =~ /vshost/
+  Dir[File.dirname(__FILE__) + '/../rel/cucumberl/*'].each do |file|
+    cp_r file, 'cucumberl', :preserve => true
   end
 end
