@@ -10,7 +10,11 @@
 %% Application callbacks
 %% ===================================================================
 
-start(_StartType, _StartArgs) ->
+start(_StartType, StartArgs) ->
+  case os:getenv("CUCUMBERL_CWD") of
+    false -> io:format("NO! Cwd is not found.~n",[]);
+    V -> io:format("Cwd is ~p", [V])
+  end,
   cucumberl_sup:start_link().
 
 start() ->
