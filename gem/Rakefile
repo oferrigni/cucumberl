@@ -1,0 +1,31 @@
+require 'rubygems'
+require 'rake'
+
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = "cucumberl"
+    gem.summary = %Q{Cucumber for Erlang}
+    gem.description = %Q{Runs Cucumber with Erlang step definitions.}
+    gem.email = "oliver.ferrigni@gmail.com"
+    gem.homepage = "http://github.com/oferrigni/cucumberl"
+    gem.authors = ["Oliver Ferrigni"]
+    gem.executables = ["cucumberl"]
+    gem.add_dependency "cucumber", ">=0.5.2"
+
+    gem.files += FileList['../cucumberl/*']
+    gem.test_files = []
+  end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+end
+
+task :gemspec => :copy_binaries
+
+desc "Copy Cuke4Nuke binaries to the dotnet directory"
+task :copy_binaries do
+  Dir[File.dirname(__FILE__) + '/../{ebin,deps}'].each do |file|
+    cp file, 'dotnet' unless file =~ /vshost/
+  end
+end
