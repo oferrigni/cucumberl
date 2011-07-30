@@ -12,11 +12,12 @@
 
 %% API
 -export([start_link/0,
-				 start_child/2]).
+				 start_child/0]).
 
 %% Supervisor callbacks
 -export([init/1]).
 
+-define(CHILD(I, Type), {I, {I, start_link, []}, temporary, 5000, Type, [I]}).
 -define(SERVER, ?MODULE).
 
 %%%===================================================================
@@ -34,9 +35,9 @@ start_link() ->
 			%io:format("Starting client supervisor~n"),
 				{ok, _Pid} = supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
-start_child(Socket, Pid) ->
+start_child() ->
 				%io:format("Staring a new child on Socket ~p ~n", [Socket]),
-				supervisor:start_child(Pid, [Socket,Pid]).
+				supervisor:start_child(?MODULE, []).
 
 %%%===================================================================
 %%% Supervisor callbacks
@@ -63,12 +64,7 @@ init([]) ->
 
         SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 
-        Restart = temporary,
-        Shutdown = brutal_kill,
-        Type = worker,
-
-        AChild = {cucumber_client, {cucumber_client, start_link, []},
-                          Restart, Shutdown, Type, [cucumber_client]},
+        AChild = ?CHILD(cucumber_client, worker),
 
         {ok, {SupFlags, [AChild]}}.
 

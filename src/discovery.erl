@@ -26,3 +26,11 @@ lists:sort(lists:filter(
 	end,
 	UnfilteredFeatureFiles)).
 
+step_matches(Modules, ArgList) ->
+  Atoms = utils:bitstring_to_atoms(ArgList),
+  lists:foldl(fun(Mod, undefined) -> 
+        Mod:step(Atoms, matches);
+        (_, Acc) -> Acc
+  end,
+  undefined, Modules).
+

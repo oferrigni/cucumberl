@@ -22,13 +22,13 @@
 -define(SERVER, ?MODULE).
 -define(DEFAULT_PORT, 2011).
 
--record(state, {port, lsock,supPid}).
+-record(state, {port, lsock}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
 
-
+	
 
 %%--------------------------------------------------------------------
 %% @doc Starts the server.
@@ -65,17 +65,21 @@ get_count() ->
 stop() ->
     gen_server:cast(?SERVER, stop).
 
+accept_loop(LSock) ->
+    {ok, Sock} = gen_tcp:accept(LSock),
+		{ok, Child} = cucumber_client_sup:start_child(),
+		gen_tcp:controlling_process(Sock, Child),
+		gen_server:cast(Child, {socket_given, Sock}),
+		accept_loop(LSock).
+
 
 %%%===================================================================
 %%% gen_server callbacks
 %%%===================================================================
 
 init([Port]) ->
-	%io:format("Start listening on socket~n"),
-		{ok, Pid} = cucumber_client_sup:start_link(),
-    {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
-    {ok, #state{port = Port, lsock = LSock,supPid = Pid}, 0}.
-
+    {ok, LSock} = gen_tcp:listen(Port, [{active, once}]),
+    {ok, #state{port = Port, lsock = LSock}, 0}.
 
 
 handle_call(get_count, _From, State) ->
@@ -83,21 +87,18 @@ handle_call(get_count, _From, State) ->
 
 
 handle_call(_, _From, State) ->
-  %io:format("In handle call no match ~n"),
     {reply, {ok, something}, State}.
 	
 	handle_cast(stop, State) ->
     {stop, normal, State}.
 
 handle_info({tcp, Socket, _RawData}, State) ->
-   %io:format("In handle info dealing with incoming data ~p ~n", [RawData]),
     gen_tcp:send(Socket, io_lib:fwrite("[\"success\",[]]~n", [])),
     {noreply, State};
 
-handle_info(timeout, #state{lsock = LSock, supPid = ThePid} = State) ->
-   %io:format("In handle info starting client supervisor ~n"),
-		{ok, Child} = cucumber_client_sup:start_child(LSock, ThePid),
-		{noreply, State#state{supPid = Child}};
+handle_info(timeout, #state{lsock = LSock } = State) ->
+		accept_loop(LSock),
+		{noreply, State};
 
 handle_info({tcp_closed, _}, State) ->
 		{noreply, State}.

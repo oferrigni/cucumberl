@@ -1,5 +1,5 @@
 #!/usr/bin/env escript
-
+%%! -noshell
 main(_) ->
 	code:add_path("ebin"),
   application:start(cucumberl),
